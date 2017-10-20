@@ -1,5 +1,4 @@
 # AWS Deployment of Xibo Sign CMS
-##
 
 Steps to make this (Start at 4 for simple Deployment):
 1) Download the latest Xibo Docker zip
