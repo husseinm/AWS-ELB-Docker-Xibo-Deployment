@@ -1,0 +1,134 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "environment": [
+                {
+                    "name": "MYSQL_DATABASE",
+                    "value": "cms"
+                },
+                {
+                    "name": "MYSQL_USER",
+                    "value": "cms"
+                },
+                {
+                  "name": "MYSQL_PASSWORD",
+                  "value": "4fs249pLCNrNo4yBj7"
+                },
+                {
+                    "name": "MYSQL_RANDOM_ROOT_PASSWORD",
+                    "value": "yes"
+                }
+            ],
+            "essential": true,
+            "image": "mysql:5.6",
+            "memory": 512,
+            "mountPoints": [
+                {
+                    "containerPath": "/var/lib/mysql",
+                    "sourceVolume": "_SharedDb"
+                }
+            ],
+            "name": "cms-db"
+        },
+        {
+            "environment": [
+              {
+                "name": "MYSQL_PASSWORD",
+                "value": "4fs249pLCNrNo4yBj7"
+              },
+              {
+                    "name": "XMR_HOST",
+                    "value": "cms-xmr"
+                }
+            ],
+            "essential": true,
+            "image": "xibosignage/xibo-cms:release_1.8.2",
+            "links": [
+                "cms-db:mysql",
+                "cms-xmr:50001"
+            ],
+            "memory": 256,
+            "mountPoints": [
+                {
+                    "containerPath": "/var/www/cms/custom",
+                    "sourceVolume": "_SharedCmsCustom"
+                },
+                {
+                    "containerPath": "/var/www/backup",
+                    "sourceVolume": "_SharedBackup"
+                },
+                {
+                    "containerPath": "/var/www/cms/web/theme/custom",
+                    "sourceVolume": "_SharedCmsWebThemeCustom"
+                },
+                {
+                    "containerPath": "/var/www/cms/library",
+                    "sourceVolume": "_SharedCmsLibrary"
+                },
+                {
+                    "containerPath": "/var/www/cms/web/userscripts",
+                    "sourceVolume": "_SharedCmsWebUserscripts"
+                }
+            ],
+            "name": "cms-web",
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80
+                }
+            ]
+        },
+        {
+            "essential": true,
+            "image": "xibosignage/xibo-xmr:release_1.8.2",
+            "memory": 128,
+            "name": "cms-xmr",
+            "portMappings": [
+                {
+                    "containerPort": 9505,
+                    "hostPort": 9505
+                }
+            ]
+        }
+    ],
+    "family": "",
+    "volumes": [
+        {
+            "host": {
+                "sourcePath": "/var/app/current/shared/db"
+            },
+            "name": "_SharedDb"
+        },
+        {
+            "host": {
+                "sourcePath": "/var/app/current/shared/cms/custom"
+            },
+            "name": "_SharedCmsCustom"
+        },
+        {
+            "host": {
+                "sourcePath": "/var/app/current/shared/backup"
+            },
+            "name": "_SharedBackup"
+        },
+        {
+            "host": {
+                "sourcePath": "/var/app/current/shared/cms/web/theme/custom"
+            },
+            "name": "_SharedCmsWebThemeCustom"
+        },
+        {
+            "host": {
+                "sourcePath": "/var/app/current/shared/cms/library"
+            },
+            "name": "_SharedCmsLibrary"
+        },
+        {
+            "host": {
+                "sourcePath": "/var/app/current/shared/cms/web/userscripts"
+            },
+            "name": "_SharedCmsWebUserscripts"
+        }
+    ]
+}
